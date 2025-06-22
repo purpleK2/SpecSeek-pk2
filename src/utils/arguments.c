@@ -11,7 +11,7 @@ static args_t arguments;
 /// @param argc argument count (from main)
 /// @param argv argument vector (from main)
 /// @return Success?
-int construct_arguments(int argc, const char** argv){
+int construct_arguments(int argc, const char** argv) {
     for (int i = 1; i < argc; ++i){
         const char* arg = argv[i];
 
@@ -44,7 +44,7 @@ int construct_arguments(int argc, const char** argv){
 }
 
 int print_help(void){
-    printf("%s%s%s: %s\n", BWHITE, "--verbose {1 | 2 | 3}", YELLOW, "show more information, in varing levels, 3 being the most info");
+    printf("%s%s%s: %s\n", BWHITE, "--verbose {1|2|3}", YELLOW, "show more information, in varing levels, 3 being the most info");
     printf("%s%s%s: %s\n", BWHITE, "--features-on-newline}", YELLOW, "prints all CPU features on a new line for readability");
     printf("%s%s%s: %s\n", BWHITE, "--no-ansi", YELLOW, "inhibits all ANSI escape codes, so no colour or terminal clearing");
     printf("%s%s%s: %s\n", BWHITE, "--help", YELLOW, "prints this help string");

@@ -17,7 +17,7 @@ unsigned int amd_cpu_get_physical_core_count(){
 unsigned int amd_cpu_get_thread_per_core(){
     unsigned int eax, ebx, ecx, edx;
 
-    if (max_supported_extended_leaf() >= 0x000001E){
+    if (cpu_get_max_supported_extended_leaf() >= 0x000001E){
         cpuid(0x8000001E, 0, &eax, &ebx, &ecx, &edx);
         unsigned int tpcu = (ebx >> 8) & 0xFF;
         return tpcu + 1;

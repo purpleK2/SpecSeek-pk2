@@ -41,8 +41,8 @@ int main(int argc, const char** argv){
 void cpu_info(cpu_t cpu){
     IF_VERBOSE(2){
         ASCII_DIVIDER("CPUID", BOLD_VENDOR_COLOUR);
-        printf("%sMax Supported CPUID Standard Leaf: %s0x%X\n", BWHITE, VENDOR_COLOUR, max_supported_leaf());
-        printf("%sMax Supported CPUID Extended Leaf: %s0x%X", BWHITE, VENDOR_COLOUR, max_supported_extended_leaf());
+        printf("%sMax Supported CPUID Standard Leaf: %s0x%X\n", BWHITE, VENDOR_COLOUR, cpu_get_max_supported_leaf());
+        printf("%sMax Supported CPUID Extended Leaf: %s0x%X", BWHITE, VENDOR_COLOUR, cpu_get_max_supported_extended_leaf());
     }
 
     ASCII_DIVIDER("Processor", BOLD_VENDOR_COLOUR);

@@ -51,8 +51,8 @@ void cpuid(
     unsigned int* edx
 );
 
-unsigned int max_supported_leaf();
-unsigned int max_supported_extended_leaf();
+unsigned int cpu_get_max_supported_leaf();
+unsigned int cpu_get_max_supported_extended_leaf();
 
 /// @brief Constructs a CPU variable
 /// @return cpu_t
@@ -77,6 +77,16 @@ void cpu_check_standard_features();
 
 /// @brief gets the extended features from the CPUID (leaf 7 for AMD)
 void cpu_check_extended_features();
+
+/// @brief helper function to determine if a CPU supports a standard leaf function
+/// @param leaf target to examine
+/// @return int true/false
+unsigned int cpu_supports_standard_leaf(unsigned int leaf);
+
+/// @brief helper function to determine if a CPU supports a extended leaf function
+/// @param leaf target to examine
+/// @return int true/false
+unsigned int cpu_supports_extended_leaf(unsigned int leaf);
 
 /// @brief get the CPU model ID leaf 1, 0
 /// @return unsigned int
