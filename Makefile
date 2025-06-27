@@ -18,7 +18,7 @@ MINGW_64 = x86_64-w64-mingw32-gcc
 # Flag Options for Compilers
 #
 CFLAGS ?=
-COMMON_CFLAGS = -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-parameter -O2 -I include
+COMMON_CFLAGS = -static -Wall -Wextra -Werror -Wno-unused-function -Wno-unused-parameter -O2 -I include
 
 #
 # Runtime arguments
