@@ -65,8 +65,10 @@ void cpu_info(cpu_t cpu){
     printf("%sPhysical Cores:  %s%u\n", BWHITE, VENDOR_COLOUR, cpu.physical_processors);
     printf("%sThreads PerCore: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.threads_per_core);
     IF_VENDOR_INTEL({
-        printf("  %sPerformance Cores: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.performance_cores);
-        printf("  %sEfficiency Cores: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.efficient_cores);
+        if (cpu_supports_standard_leaf(0x0000001A)){
+            printf("  %sPerformance Cores: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.performance_cores);
+            printf("  %sEfficiency Cores: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.efficient_cores);
+        }
     });
 
     /*

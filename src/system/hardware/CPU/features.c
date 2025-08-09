@@ -150,18 +150,18 @@ void cpu_check_extended_features(){
         */
         cpuid(0x00000007, 0, &eax, &ebx, &ecx, &edx);
         cpu_print_feature(1, HAS_FEATURE(ebx, 0), "FSGSBASE");
-        cpu_print_feature(1, HAS_FEATURE(ebx, 3), "BMI1");
-        cpu_print_feature(1, HAS_FEATURE(ebx, 5), "AVX2");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 3), "BMI1");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 5), "AVX2");
         cpu_print_feature(1, HAS_FEATURE(ebx, 7), "SMEP");
         cpu_print_feature(0, HAS_FEATURE(ebx, 8), "BMI2");
         cpu_print_feature(2, HAS_FEATURE(ebx, 10), "INVPCID");
-        cpu_print_feature(2, HAS_FEATURE(ebx, 12), "PQM");
-        cpu_print_feature(2, HAS_FEATURE(ebx, 15), "PQE");
-        cpu_print_feature(2, HAS_FEATURE(ebx, 18), "RDSEED");
-        cpu_print_feature(2, HAS_FEATURE(ebx, 19), "ADX");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 12), "PQM");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 15), "PQE");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 18), "RDSEED");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 19), "ADX");
         cpu_print_feature(1, HAS_FEATURE(ebx, 20), "SMAP");
         cpu_print_feature(2, HAS_FEATURE(ebx, 23), "CLFLUSHOP");
-        cpu_print_feature(2, HAS_FEATURE(ebx, 24), "CLWB");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 24), "CLWB");
         cpu_print_feature(0, HAS_FEATURE(ebx, 29), "SHA");
 
         /*
@@ -172,7 +172,7 @@ void cpu_check_extended_features(){
         cpu_print_feature(2, HAS_FEATURE(ebx, 4), "OSPKE");
         cpu_print_feature(2, HAS_FEATURE(ebx, 7), "CETSS");
         cpu_print_feature(1, HAS_FEATURE(ebx, 9), "VAES");
-        cpu_print_feature(2, HAS_FEATURE(ebx, 10), "VPCMUL");
+        cpu_print_feature(0, HAS_FEATURE(ebx, 10), "VPCMUL");
         cpu_print_feature(0, HAS_FEATURE(ebx, 16), "LA57");
         cpu_print_feature(1, HAS_FEATURE(ebx, 22), "RDPID");
         cpu_print_feature(2, HAS_FEATURE(ebx, 24), "BSLKTRP");
