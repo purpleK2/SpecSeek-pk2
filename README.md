@@ -2,7 +2,7 @@
 ![Logo](https://i.imgur.com/Zg37VpH.png)
 # SpecSeek. All in One Specification Tool
 
-A soloution to finding everything there is to know about a computers specifications. all in one elegant location. **a great way to share your device specifications support and features**. not sure if your PC supports some functionality? Spec Peek will relay that to you.
+A soloution to finding everything there is to know about a computers specifications. all in one elegant location. **a great way to share your device specifications support and features**. not sure if your PC supports some functionality? SpecSeek will relay that to you.
 
 ## Contributing
 Contributions in any way are always welcome, if its porting to your own operating system or making a PR for me to review, I welcome all sorts of contributions and intergration. when porting I would appreciate it if your build script pulls directly from this repo to keep your build of specseek up to date as its still in active development.
