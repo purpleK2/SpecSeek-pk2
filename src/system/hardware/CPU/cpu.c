@@ -159,7 +159,7 @@ unsigned int cpu_get_physical_core_count(){
 /// @return uint physical cores
 unsigned int cpu_get_thread_per_core(){
     IF_VENDOR_AMD({return amd_cpu_get_thread_per_core();});
-    IF_VENDOR_INTEL({return intel_cpu_get_threads_per_core();});
+    IF_VENDOR_INTEL({return intel_cpu_get_thread_count();});
     return -1;
 }
 

@@ -64,6 +64,7 @@ void cpu_info(cpu_t cpu){
     printf("%sLogical Processors: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.logical_processors);
     printf("%sPhysical Cores:  %s%u\n", BWHITE, VENDOR_COLOUR, cpu.physical_processors);
     printf("%sThreads PerCore: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.threads_per_core);
+    // handle intels weird core archetectures.
     IF_VENDOR_INTEL({
         if (cpu_supports_standard_leaf(0x0000001A)){
             printf("  %sPerformance Cores: %s%u\n", BWHITE, VENDOR_COLOUR, cpu.performance_cores);

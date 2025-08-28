@@ -28,12 +28,7 @@ int cpu_set_affinity(int apic_core_id){
     DWORD_PTR mask = 1ULL << apic_core_id;
     HANDLE thread = GetCurrentThread();
     DWORD_PTR result = SetThreadAffinityMask(thread, mask);
-    if (result == 0) {
-        fprintf(stderr, "Failed to set thread affinity: %lu\n", GetLastError());
-        return 1;
-    }
-
-    return 0;
+    return result;
     #endif
 
     return 1;

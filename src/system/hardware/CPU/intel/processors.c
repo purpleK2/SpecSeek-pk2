@@ -5,16 +5,28 @@
 #include <system/hardware/CPU/intel/processors.h>
 #include <system/hardware/CPU/affinity.h>
 #include <utils/terminal.h>
+#include <utils/arguments.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 unsigned int efficient_core_count = 0;
 unsigned int performance_core_count = 0;
 
-/// @brief gets the ammount of CPU threads per Physical Core
-/// @return unsigned int threads per core
-unsigned int intel_cpu_get_threads_per_core(){
-    return 0;
+/// @brief gets the ammount of CPU threads
+/// @return unsigned int threads
+unsigned int intel_cpu_get_thread_count(){
+    unsigned int eax, ebx, ecx, edx;
+    if (cpu_get_max_supported_leaf() >= 0x1F){
+        return 0;
+    }else{
+        for (unsigned int i = 0; i < 5; i++){
+            cpuid(0x0B, i, &eax, &ebx, &ecx, &edx);
+
+            unsigned int topology_type = (ecx >> 8) & 0xFF;
+            if(topology_type == 1) return ebx;
+        }
+    }
+    return 251;
 }
 
 /// @brief INTEL ONLY Gets the logical processor count for the CPU Package
@@ -40,7 +52,7 @@ unsigned int intel_cpu_get_logical_processor_count(void) {
 /// @brief gets the type of hybrid core it is, only should be run on CPUs that support 1Ah
 /// @return 1 (e-core) 2 (p-core)
 unsigned int intel_cpu_get_hybrid_core_type(void){
-    if (!cpu_supports_standard_leaf(0x0000001A)) {
+    if (!cpu_supports_standard_leaf(0x1A)) {
         printf("%s%s:%d Hybrid function not supported on non hybrid CPU\nThis is an Error, please report at https://github.com/Mellurboo/SpecSeek", BRED, __FILE__, __LINE__);
         return 0;
     }
@@ -84,9 +96,11 @@ unsigned int intel_cpu_get_smt_mask_width(void) {
 /// @param VOID
 /// @return unsigned int core count
 unsigned int intel_cpu_get_physical_core_count(void) {
-    unsigned int eax, ebx, ecx, edx;
+    if (cpu_get_max_supported_leaf() >= 0x1F){
+        IF_VERBOSE(2){
+            printf("This processor appears to be a 0x1F CPU\n");
+        }
 
-    if (cpu_get_max_supported_leaf() >= 0x0000001F){
         unsigned int total_cores = 0;
         unsigned int processors = intel_cpu_get_logical_processor_count();
         core_apic_t *cores = malloc(sizeof(core_apic_t) * processors);
@@ -125,48 +139,8 @@ unsigned int intel_cpu_get_physical_core_count(void) {
         free(cores);
         return performance_core_count + efficient_core_count;
 
-    }else if (cpu_get_max_supported_leaf() >= 0x0000000B){;
-        unsigned int smt_mask_width = 0;
-        unsigned int core_mask_width = 0;
-
-        for (unsigned int level = 0; level < 5; ++level) {
-            cpuid(0x0B, level, &eax, &ebx, &ecx, &edx);
-
-            unsigned int level_type = (ecx >> 8) & 0xFF;
-            if (level_type == 0 || ebx == 0){
-                break;
-            }
-
-            if (level_type == 1) {  // SMT level
-                smt_mask_width = eax & 0x1F;
-                printf("SMT mask width = %u\n", smt_mask_width);
-            } else if (level_type == 2) {  // Core level
-                core_mask_width = eax & 0x1F;
-                printf("Core mask width = %u\n", core_mask_width);
-            }
-        }
-
-        unsigned int logical_processors = intel_cpu_get_logical_processor_count();
-        printf("Logical processors = %u\n", logical_processors);
-
-        if (core_mask_width == 0) {
-            printf("Core mask width is zero, cannot compute physical cores via 0x0Bh\n");
-            return 0;
-        }
-
-        if (core_mask_width <= smt_mask_width) {
-            printf("Core mask width (%u) <= SMT mask width (%u), invalid data. :(\n",
-                   core_mask_width, smt_mask_width);
-            return 0;
-        }
-
-        unsigned int threads_per_core = 1U << (core_mask_width - smt_mask_width);
-        printf("Threads per core = %u\n", threads_per_core);
-
-        unsigned int physical_cores = logical_processors / threads_per_core;
-        printf("Physical cores computed = %u\n", physical_cores);
-
-        return physical_cores;
+    }else {
+        return intel_cpu_get_logical_processor_count() / intel_cpu_get_thread_count();
     }
 
     return 0;
