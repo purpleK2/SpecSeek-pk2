@@ -6,6 +6,9 @@
 #define _AMD_VENDOR_STRING     "AuthenticAMD"
 #define _INTEL_VENDOR_STRING   "GenuineIntel"
 
+#define VENDOR_COLOUR (strcmp(cpu_get_vendor(), _AMD_VENDOR_STRING) == 0 ? RED : CYAN)
+#define BOLD_VENDOR_COLOUR (strcmp(cpu_get_vendor(), _AMD_VENDOR_STRING) == 0 ? BRED : BCYAN)
+
 #define HAS_FEATURE(reg, bit) (((reg) & (1 << (bit))) != 0)
 #define SUPPORTS_LEAF(leaf) if ()
 
@@ -140,6 +143,15 @@ unsigned int cpu_get_logical_processor_count();
 /// @return uint physical cores
 unsigned int cpu_get_thread_count_per_core();
 
-
+/// @brief platform agnostic function call to get the microarch for the CPU Vendor
+/// @param family CPUID Family
+/// @param base_model CPUID base_model
+/// @param ext_model CPUID ext_model
+/// @param stepping CPUID stepping (utilised in INTEL only)
+/// @return const char microarch name
+const char* cpu_get_microarch(unsigned int family,
+    unsigned int base_model,
+    unsigned int ext_model,
+    unsigned int stepping);
 
 #endif

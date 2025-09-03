@@ -14,7 +14,7 @@ const char* amd_cpu_get_microarch(unsigned int family, unsigned int model, unsig
 /// @param ext_model the CPUs Extended Model
 /// @param stepping revision?
 /// @return Microarchetecture string.
-const char* intel_get_cpu_microarch(unsigned int family,
+const char* intel_cpu_get_microarch(unsigned int family,
     unsigned int model,
     unsigned int ext_model,
     unsigned int stepping);

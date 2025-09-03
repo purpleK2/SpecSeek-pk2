@@ -5,6 +5,7 @@
 #include <system/hardware/CPU/intel/processors.h>
 #include <system/hardware/CPU/specifications.h>
 #include <system/hardware/CPU/virtualisation.h>
+#include <system/hardware/CPU/microarch.h>
 #include <utils/arguments.h>
 #include <utils/terminal.h>
 
@@ -173,3 +174,19 @@ unsigned int cpu_get_logical_processor_count(){
     IF_VENDOR_INTEL({return intel_cpu_get_logical_processor_count();});
     return -1;
 }
+
+/// @brief platform agnostic function call to get the microarch for the CPU Vendor
+/// @param family CPUID Family
+/// @param base_model CPUID base_model
+/// @param ext_model CPUID ext_model
+/// @param stepping CPUID stepping (utilised in INTEL only)
+/// @return const char microarch name
+const char* cpu_get_microarch(unsigned int family,
+    unsigned int base_model,
+    unsigned int ext_model,
+    unsigned int stepping){
+    IF_VENDOR_AMD({return amd_cpu_get_microarch(family, base_model, ext_model);});
+    IF_VENDOR_INTEL({return intel_cpu_get_microarch(family, base_model, ext_model, stepping);});
+    return NULL;
+}
+ 

@@ -2,6 +2,11 @@
 #define _TERMINAL_H     1
 
 #include <utils/arguments.h>
+#include <locale.h>
+
+#if defined(_WIN32)
+#include <windows.h>
+#endif
 
 #define CLEAR_SCREEN() printf("\033[2J\033[H")
 #define ANSI(c) (get_arguments().no_ansi ? "" : (c))
@@ -53,5 +58,17 @@
 #define BWHITE    ANSI("\x1b[1;37m")
 #define RESET     ANSI("\x1b[0m")
 #endif
+
+/*
+    Windows as per usual is different as their local codes are very different, they 
+    have a code page which while not weird itself theyre formatted differently
+    for example "English_United States.65001". This doesnt suck too bad becuase we
+    can just check for the .65001 at the end, but for POSIX compliant systems
+    we can simply just check for 'utf8' or 'UTF-8'. not sure which one i like more
+*/
+
+/// @brief Check if the local is UTF-8.
+/// @return true/false
+int terminal_supports_utf8(void);
 
 #endif
