@@ -40,6 +40,19 @@ unsigned int amd_cpu_get_thread_count_per_core(){
     }
 }
 
+unsigned int amd_cpu_get_nominal_core_clock(void){
+    unsigned int eax, ebx, ecx, edx;
+
+    if (!cpu_supports_extended_leaf(0x80000008)){
+        return 0;
+    }
+
+    cpuid(0x80000008, 0, &eax, &ebx, &ecx, &edx);
+
+    unsigned int base_mhz = ecx & 0xFF;
+    return base_mhz * 1000000;
+}
+
 /// @brief gets all logical processors (threads)
 /// @return int threads
 unsigned int amd_cpu_get_logical_processor_count(){

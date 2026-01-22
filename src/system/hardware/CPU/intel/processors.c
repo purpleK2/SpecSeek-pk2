@@ -112,7 +112,7 @@ unsigned int intel_cpu_get_physical_core_count(void) {
                 continue;   // this will mean we can see if they all fail or not? which might be helpful later.
             }
             #endif
-                        
+
             unsigned int apic_id = intel_cpu_get_apic_id();
             unsigned int core_type = intel_cpu_get_hybrid_core_type();
             unsigned int core_id = apic_id >> intel_cpu_get_smt_mask_width();
@@ -146,6 +146,25 @@ unsigned int intel_cpu_get_physical_core_count(void) {
     }
 
     return 0;
+}
+
+unsigned int intel_cpu_get_crystal_clock_speed() {
+    unsigned int eax = 0, ebx = 0, ecx = 0, edx = 0;
+
+    if (!cpu_supports_standard_leaf(0x15)) {
+        IF_VERBOSE(2) {
+            printf("%sCPUID leaf 0x15 not supported on this CPU\n", BYELLOW);
+        }
+        return 0;
+    }
+
+    cpuid(0x15, 0, &eax, &ebx, &ecx, &edx);
+
+    if (ecx == 0) {
+        return 0;
+    }
+
+    return ecx;
 }
 
 /// @brief helper function to return the ammount of performance cores on a hybrid CPU

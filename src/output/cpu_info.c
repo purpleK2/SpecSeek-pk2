@@ -3,6 +3,8 @@
 #include <utils/terminal.h>
 #include <utils/arguments.h>
 #include <output/cpu_info.h>
+#include <system/hardware/CPU/intel/processors.h>
+#include <system/hardware/CPU/specifications.h>
 
 /// @brief Prints the processors supported Standard and Extended Leaves
 /// @param cpu_ctx cpu context
@@ -72,11 +74,27 @@ void print_cpu_features(cpu_t cpu_ctx){
     TERM_DIVIDER_NOTEXT(BYELLOW);
 }
 
+void print_cpu_clock_info(){
+    IF_VENDOR_INTEL({
+        unsigned int cclock = intel_cpu_get_crystal_clock_speed();
+        TERM_DIVIDER("CPU Crystal Clock (Hz)", VENDOR_COLOUR);
+        printf("Crystal Clock Speed %u", cclock);
+    });
+
+    IF_VENDOR_AMD({        
+        unsigned int cclock = amd_cpu_get_nominal_core_clock();
+        TERM_DIVIDER("CPU Crystal Clock (Hz)", VENDOR_COLOUR);
+        printf("%sCrystal Clock Speed = %s%uhz", WHITE, BWHITE, cclock);
+        TERM_DIVIDER_NOTEXT(VENDOR_COLOUR);
+    });
+}
+
 /// @brief calls upon all cpu print functions, does not override min_verbosity
 /// @param cpu_ctx cpu context (passed down along all calls)
 void print_cpu_info(cpu_t cpu_ctx){
     print_cpu_cpuid_supported_leafs(cpu_ctx, 2);
     print_cpu_processor_identifiers(cpu_ctx);
     print_cpu_specification(cpu_ctx);
+    print_cpu_clock_info();
     print_cpu_features(cpu_ctx);
 }
