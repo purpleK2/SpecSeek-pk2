@@ -13,7 +13,7 @@
 /*
     GCC ANSI Escape Codes (More Portable)
 */
-#if defined(__unix__)
+#if !defined(_WIN32)
 #define BLACK     ANSI("\e[0;30m")
 #define RED       ANSI("\e[0;31m")
 #define GREEN     ANSI("\e[0;32m")
@@ -51,7 +51,7 @@
 #define BRED      ANSI("\x1b[1;31m")
 #define BGREEN    ANSI("\x1b[1;32m")
 #define BYELLOW   ANSI("\x1b[1;33m")
-#define BBLUE     ANSI("\x1b[1:34m")
+#define BBLUE     ANSI("\x1b[1;34m")
 #define BMAGENTA  ANSI("\x1b[1;35m")
 #define BCYAN     ANSI("\x1b[1;36m")
 #define BWHITE    ANSI("\x1b[1;37m")

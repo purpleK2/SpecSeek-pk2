@@ -1,3 +1,5 @@
 sysroot/
 external/
 bin/
+*.o
+specseek

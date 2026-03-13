@@ -1,76 +1,29 @@
-ELF_TARGET_64 = specseek
+.PHONY: all clean distclean
 
-CC 	?= x86_64-elf-gcc
+include ../userspace.mk
 
-ELF_BIN_DIR_64 = bin
-ELF_OBJ_DIR_64 = $(ELF_BIN_DIR_64)/obj
+TARGET = specseek
+C_SRCS = $(shell find src -name '*.c')
+OBJS = $(C_SRCS:.c=.o)
 
-LIB_DIR = sysroot/lib
-LIBC = $(LIB_DIR)/blibc.a
-CRT0 = $(LIB_DIR)/start.o
-
-BLIBC_REPO = https://codeberg.org/Bleed-Kernel/blibc.git
-BLIBC_DIR  = external/blibc
-
-COMMON_CFLAGS = \
-	-ffreestanding \
-	-fno-stack-protector \
-	-fno-stack-check \
-	-Wall \
-	-nostdlib \
-	-no-pie \
-	-m64 \
-	-Iinclude \
-	-Isysroot/include \
-	-Isysroot/libc \
-	-nostdinc
-
-LDFLAGS = \
+SYSROOT = $(USERSPACE_SYSROOT)
+CFLAGS += -Iinclude -D_INTEL_AFFINITY=0
+LDFLAGS = -nostdlib \
 	-static \
-	-nostdlib \
-	-no-pie \
-	-m64 \
-	-Iinclude \
-	-L$(LIB_DIR) \
-	-Isysroot/include \
-	-Isysroot/lib
+	--entry=_start \
+	-L$(SYSROOT)/usr/lib \
+	$(SYSROOT)/usr/lib/Scrt1.o \
+	$(SYSROOT)/usr/lib/crti.o \
+	-lc \
+	$(SYSROOT)/usr/lib/crtn.o \
+	-o $(TARGET)
 
-SRCS = $(shell find src -name '*.c')
-ELF_OBJS_64 = $(patsubst src/%.c,$(ELF_OBJ_DIR_64)/%.o,$(SRCS))
+all: $(TARGET)
 
-all: $(ELF_TARGET_64)
-
-$(ELF_TARGET_64): blibc $(ELF_OBJS_64)
-	@mkdir -p $(ELF_BIN_DIR_64)
-	$(CC) $(LDFLAGS) \
-		-o $(ELF_BIN_DIR_64)/$(ELF_TARGET_64) \
-		$(CRT0) \
-		$(ELF_OBJS_64) \
-		-l:blibc.a
-
-$(ELF_OBJ_DIR_64)/%.o: src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(COMMON_CFLAGS) -c $< -o $@
-
-blibc: $(LIBC)
-
-$(LIBC):
-	@echo "[BLIBC] Preparing blibc"
-	@if [ ! -d "$(BLIBC_DIR)" ]; then \
-		git clone $(BLIBC_REPO) $(BLIBC_DIR); \
-	fi
-	$(MAKE) -C $(BLIBC_DIR)
-
-	@echo "[BLIBC] Syncing sysroot"
-	@mkdir -p sysroot
-	@cp -r $(BLIBC_DIR)/sysroot/* sysroot/
-
-build: $(ELF_TARGET_64)
+$(TARGET): $(OBJS)
+	$(LD) $(OBJS) $(LDFLAGS)
 
 clean:
-	rm -rf bin
+	rm -f $(OBJS) $(TARGET)
 
-distclean:
-	rm -rf bin sysroot external
-
-.PHONY: all clean distclean blibc
+distclean: clean

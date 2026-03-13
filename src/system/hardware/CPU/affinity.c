@@ -1,8 +1,8 @@
 #define _GNU_SOURCE
 
-// settings for portability :)
-
-#define _INTEL_AFFINITY 0       // disable if you dont have a thread affinity implementation (hint: you dont)
+#ifndef _INTEL_AFFINITY
+#define _INTEL_AFFINITY 0
+#endif
 
 #if _INTEL_AFFINITY == 1
 
@@ -37,6 +37,13 @@ int cpu_set_affinity(int apic_core_id){
     return result;
     #endif
 
+    return 1;
+}
+
+#else
+
+int cpu_set_affinity(int apic_core_id) {
+    (void)apic_core_id;
     return 1;
 }
 
